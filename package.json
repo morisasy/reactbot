@@ -6,10 +6,10 @@
   "engines": {
     "node": "10.15.1",
     "npm": "6.7.0"
-
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "backend": "nodemon index.js"
   },
   "keywords": [
     "react",
@@ -21,6 +21,12 @@
   "author": "Risasi",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "dialogflow": "^0.8.0",
     "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "install": "^0.12.2",
+    "nodemon": "^1.18.9"
   }
 }
