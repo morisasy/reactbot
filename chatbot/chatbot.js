@@ -2,8 +2,16 @@
 const dialogflow = require('dialogflow');
 const structjsnon = require('./structjson');
 const config = require('../config/keys');
+
+const projectID = config.googleProjectID;
+const credentials = {
+	client_email: config.googleClientEmail,
+	private_key: config.googlePrivateKey
+};
+
+
  // Create a new session
-const sessionClient = new dialogflow.SessionsClient();
+const sessionClient = new dialogflow.SessionsClient({projectID:projectID, credentials:credentials});
 const sessionPath = sessionClient.sessionPath(config.googleProjectID, config.dialogFlowSessionID);
 
 module.exports = {
