@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter,
 		 Route} from 'react-router-dom';
 import Landing from './pages/Landing';
@@ -10,7 +9,7 @@ import Chatbot from './chatbot/Chatbot';
 
 
 const App = () =>  (
-	<div>
+	<div className = "container">
 		<BrowserRouter>
 			<div>
 				<Header />
