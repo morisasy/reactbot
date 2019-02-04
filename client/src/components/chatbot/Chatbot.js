@@ -66,10 +66,18 @@ class  Chatbot extends Component {
 		this.df_event_query('Welcome');
 	}
 
+	renderOneMessage(message, i){
+		if(message.msg && message.msg.text && message.msg.text.text ){
+					return <Message key ={i} speaks = {message.speaks} text = {message.msg.text.text} />;
+				} else {
+					return <h2>Cards</h2>;
+				}
+
+	}
 	renderMessages(stateMessages){
 		if (stateMessages){
 			return stateMessages.map((message, i) => {
-				return <Message key ={i} speaks = {message.speaks} text = {message.msg.text.text} />;
+				return this.renderOneMessage(message, i);		
 			});
 		} else {
 			return null;
