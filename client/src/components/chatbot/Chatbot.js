@@ -2,15 +2,25 @@ import React,
 	 {Component} from 'react';
 import axios from 'axios/index';
 import Message from './message';
+import Cookies from 'universal-cookie';
+import {v4 as uuid } from 'uuid';
+
+const cookies = new Cookies();
 
 
 class  Chatbot extends Component {
 	messagesEnd;
+	talkInput;
 	constructor(props){
 		super(props);
 		this.state = {
 			messages: []
 		}
+		if (cookies.get('userID') === undefined){
+			cookies.set('userID', uuid(), {path: '/'});
+
+		}
+		
 	}
 
 	async df_text_query(text){
