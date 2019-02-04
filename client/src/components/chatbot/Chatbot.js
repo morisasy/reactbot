@@ -23,18 +23,18 @@ class  Chatbot extends Component {
 		
 	}
 
-	async df_text_query(text){
+	async df_text_query(queryText){
 		let says = {
 			speaks: 'me',
 			msg: {
 				text: {
-					text: text
+					text: queryText
 				}
 			}
 		};
 
 		this.setState({message: [...this.state.message, says]})
-		const res = await axios.post('/api/df_text_query', {text});
+		const res = await axios.post('/api/df_text_query', {text: queryText, userID: cookies.get('userID')});
 
 		for (let msg of res.data.fulfillmentMessages){
 			let says = {
@@ -44,8 +44,8 @@ class  Chatbot extends Component {
 			this.setState({message: [...this.state.message, says]});
 		}
 	}
-	async df_event_query(event){
-		const res = await axios.post('/api/df_event_query', {event});
+	async df_event_query(eventName){
+		const res = await axios.post('/api/df_event_query', {event: eventName, userID: cookies.get('userID')});
 
 		for (let msg of res.data.fulfillmentMessages){
 			let says = {
