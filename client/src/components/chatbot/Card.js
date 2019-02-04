@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Card = (props) => (
-	<div style = {{display: flex; ,justifyContent: flexEnd;, paddingRight: 30, width: 270}}>
+	<div style = {{display: "flex",justifyContent: "flexEnd", paddingRight: 30, width: 270}}>
 		<div class="card">
 	        <div class="card-image" style = {{width: 240}}>
 	          <img alt = {props.payload.fields.header.stringValue}
@@ -16,7 +16,7 @@ const Card = (props) => (
 	          <a target="_blank" href={props.payload.fields.link.stringValue}>GET NOW</a>
 	        </div>
       </div>
-	<div>
+	</div>
 )
 
 export default Card;
