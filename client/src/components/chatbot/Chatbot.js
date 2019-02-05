@@ -14,6 +14,7 @@ class  Chatbot extends Component {
 	talkInput;
 	constructor(props){
 		super(props);
+		this._handleQuickRepliePayload = this._handleQuickRepliePayload.bind(this);
 		this.state = {
 			messages: []
 		}
@@ -67,6 +68,10 @@ class  Chatbot extends Component {
 		this.df_event_query('Welcome');
 	}
 
+	_handleQuickRepliePayload(payload, text){
+		this.df_text_query(text);
+	}
+
 	rendercards(cards){
 		return cards.map((card, i) => <Card key = {i} payload = {card.structValue} />);
 
@@ -74,16 +79,24 @@ class  Chatbot extends Component {
 
 	renderOneMessage(message, i){
 		if(message.msg && message.msg.text && message.msg.text.text ){
-					return <Message key ={i} speaks = {message.speaks} text = {message.msg.text.text} />;
-		}else if (message.msg && message.msg.payload && message.msg.payload.fields && message.msg.payload.fields.card){
-					return <div key = {i}>
+					return <Message 
+						key ={i} 
+						speaks = {message.speaks} 
+						text = {message.msg.text.text} />;
+		}else if(message.msg && 
+				message.msg.payload && 
+				message.msg.payload.fields && 
+				message.msg.payload.fields.card)
+		{
+					return <div key = {i} >
 									<div className="card-panel grey lighten-5 z-depth-1">
 										<div style= {{overflow: 'hidden'}}>
 											<div className = "col s2">
 											  <a class="btn-floating btn-large waves-effect waves-light red">
 											  	{message.speaks}</a>
 											</div>
-											<div style = {{height: 300, width: message.msg.payload.fields.cards.listValue.length * 270}}>
+											<div style = {{height: 300,
+												 width: message.msg.payload.fields.cards.listValue.length * 270}} >
 												{this.renderCards(message.msg.payload.fields.careds.listValue.values)}
 											</div>
 										</div>
