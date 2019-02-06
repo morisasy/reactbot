@@ -16,7 +16,8 @@ class  Chatbot extends Component {
 		super(props);
 		this._handleQuickRepliePayload = this._handleQuickRepliePayload.bind(this);
 		this.state = {
-			messages: []
+			messages: [],
+			showBot: true
 		}
 		if (cookies.get('userID') === undefined){
 			cookies.set('userID', uuid(), {path: '/'});
@@ -62,14 +63,33 @@ class  Chatbot extends Component {
 	componentDidÚpdate(){
 
 		this.messagesEnd.scrollIntoView({behavior: "smooth"});
+		if(this.talkInput){
+			this.talkInput.focus();
+		}
 	}
 
 	componentDidMount(){
 		this.df_event_query('Welcome');
 	}
 
+	show =() =>{
+		this.setState({showBot: true})
+	}
+
+	hide = () =>{
+		this.setState({showBot: false})
+	}
+
 	_handleQuickRepliePayload(payload, text){
-		this.df_text_query(text);
+		case(payload){
+			case 'training_masterclass':
+			ths.df_event_query('MASTERCLASS');
+			break;
+			default:
+				this.df_text_query(text);
+			break;
+		}
+		
 	}
 
 	rendercards(cards){
@@ -83,7 +103,7 @@ class  Chatbot extends Component {
 						key ={i} 
 						speaks = {message.speaks} 
 						text = {message.msg.text.text} />;
-		}else if(message.msg && 
+		} else if(message.msg && 
 				message.msg.payload && 
 				message.msg.payload.fields && 
 				message.msg.payload.fields.card)
@@ -101,7 +121,7 @@ class  Chatbot extends Component {
 											</div>
 										</div>
 									</div>
-							</div>
+							</div>;
 				
 		} else {
 					return <h2>Cards</h2>;
@@ -127,32 +147,75 @@ class  Chatbot extends Component {
 	}
 
 	render(){
-		return (
-			<div style={{height: 500, width: 400, position: 'absolute', bottom: 0, right: 0,border: "1px solid grey", float: 'right'}}> 
+		if (this.state.showBot){
+			return (
+				<div style={{height: 500,
+					 width: 400, 
+					 position: 'absolute', 
+					 bottom: 0, 
+					 right: 0,
+					 border: "1px solid grey", 
+					 float: 'right'}}> 
+
+					<nav>
+						<div className = "nav-wrapper">
+							<a className = "brand-log">Chatbot</a>
+							<ul id="nav-mobile" className="right hide-on-med-and-down">
+								<li><a onClick = {this.hide} > Close</a></li>
+							</ul>
+						</div>
+					</nav>
+					<div id = "chatbot" style= {{height: 388,
+						 width: '100%', 
+						 overflow: 'auto'}}>
+						
+						{this.renderMessages(this.state.message)}
+						<div ref = {(el) => {this.messagesEnd = el;}} 
+							style = {{float: 'left', clear: "both"}}>
+						</div>
+
+					</div>
+					<div className = "col s12">
+					<input 
+						style = {{margin: 0, 
+							paddingLeft: '1%',
+							paddingRight: '1%',
+							width: '98%'}}
+						placeholder = "Type a message"
+						type = "text" 
+						autofocus="true" 
+						ref = {(input) => {this.talkInput = input}} 
+						onKeyPress = {(e)=> this._handleInputKeyPress(e)}  />
+					</div>
+				</div>
+			)
+
+		} else {
+			return (
+			<div style={{height: 40,
+				 width: 400, 
+				 position: 'absolute', 
+				 bottom: 0, 
+				 right: 0,
+				 border: "1px solid grey", 
+				 float: 'right'}}> 
 				<nav>
 					<div className = "nav-wrapper">
 						<a className = "brand-log">Chatbot</a>
+						<ul id="nav-mobile" className="right hide-on-med-and-down">
+								<li><a onClick = {this.show} > show</a></li>
+							</ul>
 					</div>
 				</nav>
-				<div id = "chatbot" style= {{height: 388, width: '100%', overflow: 'auto'}}>
-					
-					{this.renderMessages(this.state.message)}
-					<div ref = {(el) => {this.messagesEnd = el;}} 
-						style = {{float: 'left', clear: "both"}}>
-					</div>
-
+				<div ref = {(el) => {this.messagesEnd = el;}} 
+							style = {{float: 'left', clear: "both"}}>
 				</div>
-				<div className = "col s12">
-				<input 
-					style = {{margin: 0, paddingLeft: '1%', paddingRight: '1%', width: '98%'}}
-					placeholder = "Type a message"
-					type = "text" 
-					autofocus="true" 
-					ref = {(input) => {this.talkInput = input}} 
-					onKeyPress = {(e)=> this._handleInputKeyPress(e)}  />
-				</div>
+				
 			</div>
 		)
+
+		}
+		
 	}
 
 }
