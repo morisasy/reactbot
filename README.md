@@ -1,1 +1,1 @@
-# reactbot
+# Simple React Chatbot App.
