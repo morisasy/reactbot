@@ -1,6 +1,7 @@
 import React,
 	 {Component} from 'react';
 import axios from 'axios/index';
+import { withRouter } from 'react-router-dom';
 import Message from './message';
 import Cookies from 'universal-cookie';
 import {v4 as uuid } from 'uuid';
@@ -17,7 +18,8 @@ class  Chatbot extends Component {
 		this._handleQuickRepliePayload = this._handleQuickRepliePayload.bind(this);
 		this.state = {
 			messages: [],
-			showBot: true
+			showBot: true,
+			showWelcomeSent: false
 		}
 		if (cookies.get('userID') === undefined){
 			cookies.set('userID', uuid(), {path: '/'});
@@ -68,11 +70,33 @@ class  Chatbot extends Component {
 		}
 	}
 
-	componentDidMount(){
-		this.df_event_query('Welcome');
+	resoloveAfterXSeconds(x){
+		return new Promise(resolve => {
+			setTimeout(() => {
+				resolve(x);
+			}, x * 1000);
+		});
 	}
 
-	show =() =>{
+	async componentDidMount(){
+		this.df_event_query('Welcome');
+
+		if(window.location.pathname === '/shop' && !this.state.shopWelcomeSent){
+			await this.resoloveAfterXSeconds(1);
+			this.df_event_query('WELCOME_SHOP');
+			this.setState({shopWelcomeSent: true, showBot: true});
+		}
+
+		this.props.history.listen(() => {
+			console.log('listening');
+			if(this.props.history.location.pathname === 'shop' && !this.state.shopWelcomeSent){
+				this.df_event_query('WELCOME_SHOP');
+				this.setState({shopWelcomeSent: true, showBot: true});
+			}
+		})
+	}
+
+	show = () =>{
 		this.setState({showBot: true})
 	}
 
@@ -81,10 +105,15 @@ class  Chatbot extends Component {
 	}
 
 	_handleQuickRepliePayload(payload, text){
-		case(payload){
+		switch(payload){
+			case 'recommended_yes':
+				this.df_event_query('SHOW_RECOMMENDATIONS');
+				break;
+
 			case 'training_masterclass':
-			ths.df_event_query('MASTERCLASS');
-			break;
+				this.df_event_query('MASTERCLASS');
+				break;
+
 			default:
 				this.df_text_query(text);
 			break;
@@ -222,4 +251,4 @@ class  Chatbot extends Component {
 
 
 
-export default Chatbot;
+export default withRouter(Chatbot);
