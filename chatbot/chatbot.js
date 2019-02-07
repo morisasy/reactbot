@@ -14,6 +14,9 @@ const credentials = {
 
  // Create a new session
 const sessionClient = new dialogflow.SessionsClient({projectID:projectID, credentials:credentials});
+const sessionPath = sessionClient.sessionPath(projectID, sessionID);
+
+const Registration = mongoose.model('registration');
 
 
 module.exports = {
@@ -59,7 +62,35 @@ module.exports = {
 	},
 
 	handleAction: function(responses){
+		let self = module.exports;
+		let queryResult = responses[0].queryResult;
+
+		switch(queryResult.action){
+			case'recommendcourse-yes':
+				if(queryResult.allRequiredParamsPresent){
+					self.saveRegistration(queryResult.parameters.fields);
+				}
+
+				break;
+		}
 		return responses;
+	}
+
+	saveRegistration: function(fields){
+		const registration = new Registration({
+			name: fields.name.stringValue,
+			address: fields.name.stringValue,
+			phone: fields.name.stringValue,
+			email: fields.name.stringValue,
+			registerDate: Date.now() 
+
+		});
+
+		try{
+			registration.save();
+		} catch(err){
+			console.log(err);
+		}
 	}
 
 }
